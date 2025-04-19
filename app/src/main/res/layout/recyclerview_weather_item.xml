@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    >
+    <TextView
+        android:id="@+id/item_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        />
+
+<ImageView
+    android:id="@+id/item_wea_img"
+    android:layout_width="30dp"
+    android:layout_height="30dp"
+    android:layout_weight="1"
+    android:gravity="center"
+
+    />
+    <TextView
+        android:id="@+id/item_tem"
+android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="--℃"
+        android:textSize="20dp"
+        android:gravity="right"
+        />
+</LinearLayout>

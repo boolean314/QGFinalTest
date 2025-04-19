@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".viewPager.fragment.task.clickmenu.ClickInsertTaskActivity"
+    android:orientation="vertical"
+    android:layout_margin="30dp"
+    android:gravity="center"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+
+    >
+    <Button
+        android:id="@+id/choose_start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选择开始时间"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:id="@+id/insert_start_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+
+    android:textSize="20sp"
+        android:gravity="center"
+
+        />
+</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        >
+        <Button
+            android:id="@+id/choose_end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择结束时间"
+            android:textSize="20sp"
+            />
+
+        <TextView
+            android:id="@+id/insert_end_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textSize="20sp"
+            android:gravity="center"
+
+            />
+    </LinearLayout>
+    <EditText
+        android:id="@+id/insert_task_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="请输入事项内容"
+        />
+      <Button
+          android:id="@+id/finish_insert_task"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="完成添加"
+          />
+</LinearLayout>

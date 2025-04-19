@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/pay"
+        android:title="支出记录" />
+    <item
+        android:id="@+id/income"
+        android:title="收入记录" />
+    <item
+        android:id="@+id/bill_query"
+        android:title="账单查询" />
+    <item
+        android:id="@+id/bill_insert"
+android:title="添加记录" />
+
+
+</menu>
