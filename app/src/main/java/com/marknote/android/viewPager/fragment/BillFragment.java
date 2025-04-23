@@ -24,7 +24,9 @@ import com.marknote.android.R;
 import com.marknote.android.SQLiteDatabase.SQLiteUtil;
 import com.marknote.android.viewPager.fragment.Bill.billAdapter.Bill;
 import com.marknote.android.viewPager.fragment.Bill.billAdapter.BillAdapter;
+import com.marknote.android.viewPager.fragment.Bill.clickmenu.ClickIncomeBillActivity;
 import com.marknote.android.viewPager.fragment.Bill.clickmenu.ClickInsertBillActivity;
+import com.marknote.android.viewPager.fragment.Bill.clickmenu.ClickPayBillActivity;
 import com.marknote.android.viewPager.fragment.Bill.clickmenu.ClickQueryBillActivity;
 import com.marknote.android.viewPager.fragment.Bill.multiSelectedBill.MultiSelectedBillActivity;
 
@@ -45,6 +47,10 @@ public class BillFragment extends Fragment {
         toolbar = view.findViewById(R.id.bill_toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
+        RecyclerView recyclerView = view.findViewById(R.id.bill_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        BillAdapter billAdapter = new BillAdapter(billList);
+        recyclerView.setAdapter(billAdapter);
         return view;
     }
 
@@ -61,9 +67,11 @@ public class BillFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.pay) {
-
+            Intent intent = new Intent(getContext(), ClickPayBillActivity.class);
+            startActivity(intent);
         } else if (id == R.id.income) {
-
+            Intent intent = new Intent(getContext(), ClickIncomeBillActivity.class);
+            startActivity(intent);
         } else if (id == R.id.bill_query) {
             Intent intent = new Intent(getContext(), ClickQueryBillActivity.class);
             startActivity(intent);
@@ -89,6 +97,7 @@ public class BillFragment extends Fragment {
         setHasOptionsMenu(true);
         Cursor cursor = SQLiteUtil.queryBill("Bill");
         billList.clear(); // 清空旧数据
+
         while (cursor.moveToNext()) {
             // 提取每一列的数据
 

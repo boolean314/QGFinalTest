@@ -61,4 +61,9 @@ if (type != null && type.equals("支出")) {
         return mBillList.size();
     }
 
+    public void updateBills(List<Bill> bills) {
+        mBillList = bills;
+        notifyDataSetChanged();
+    }
+
 }

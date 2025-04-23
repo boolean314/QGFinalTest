@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+
 }
 
 android {
@@ -32,6 +33,10 @@ android {
 }
 
 dependencies {
+
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    implementation ("cn.hutool:hutool-all:5.8.11")
+    implementation ("androidx.cardview:cardview:1.0.0")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
     implementation ("com.google.android.material:material:1.4.0")

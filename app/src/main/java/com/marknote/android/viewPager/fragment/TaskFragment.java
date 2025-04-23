@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,6 +37,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,16 +52,21 @@ public class TaskFragment extends Fragment {
     private TaskAdapter taskAdapter;
     private RecyclerView recyclerView;
     private int lastSpinnerPosition;
+    private Button deleteButton; // 全局删除按钮
+    private CheckBox checkBox;
 
     @Override
     // 创建视图
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 使用布局文件fragment_weather.xml填充视图
+        // 使用布局文件fragment_task.xml填充视图
         view = inflater.inflate(R.layout.fragment_task, container, false);
 
         toolbar = view.findViewById(R.id.task_toolbar);
         spinner = view.findViewById(R.id.selected_task_status);
         recyclerView = view.findViewById(R.id.task_recycler_view);
+        deleteButton = view.findViewById(R.id.delete_task); // 初始化删除按钮
+        deleteButton.setVisibility(View.GONE); // 默认隐藏删除按钮
+checkBox= view.findViewById(R.id.task_checkbox);
         // 给spinner初始化适配器
         String[] data = {"未办", "已结束"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data);
@@ -67,8 +76,30 @@ public class TaskFragment extends Fragment {
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-        //给recyclerView 初始化适配器
+        // 初始化RecyclerView适配器
+        taskAdapter = new TaskAdapter(waitedTaskList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(taskAdapter);
 
+        // 创建返回按钮回调
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (taskAdapter != null && taskAdapter.isMultiSelectMode()) {
+                    // 退出多选模式
+                    taskAdapter.exitMultiSelectMode();
+                    deleteButton.setVisibility(View.GONE);
+                } else {
+                    // 如果不是多选模式，允许默认返回行为
+                    setEnabled(false);
+                    requireActivity().onBackPressed();
+                }
+            }
+        };
+
+        // 将回调添加到Activity的返回按钮分发器
+        requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+        initListener();
 
         return view;
     }
@@ -90,7 +121,6 @@ public class TaskFragment extends Fragment {
             startActivity(intent);
         }
         return true;
-
     }
 
     @Override
@@ -107,7 +137,7 @@ public class TaskFragment extends Fragment {
         waitedTaskList.clear();
         finishedTaskList.clear();
 
-        //获取当前时间
+        // 获取当前时间
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
         if (cursor != null) {
@@ -116,7 +146,7 @@ public class TaskFragment extends Fragment {
                 String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
                 String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
                 Task task = new Task(startTime, endTime, taskContent);
-                //
+
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 try {
                     Date endTimeDate = dateFormat.parse(endTime);
@@ -128,16 +158,33 @@ public class TaskFragment extends Fragment {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
             }
             cursor.close();
         }
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        // 对未办任务按开始时间早的放前面排序
+        Collections.sort(waitedTaskList, new Comparator<Task>() {
+            @Override
+            public int compare(Task t1, Task t2) {
+                return t1.getStartTime().compareTo(t2.getStartTime());
+            }
+        });
+
+        // 对已结束任务按最晚结束的时间放前面排序
+        Collections.sort(finishedTaskList, new Comparator<Task>() {
+            @Override
+            public int compare(Task t1, Task t2) {
+                return t2.getEndTime().compareTo(t1.getEndTime());
+            }
+        });
+
+        // 更新适配器数据
         if (lastSpinnerPosition == 0) {
-            taskAdapter = new TaskAdapter(waitedTaskList);
+            taskAdapter.updateData(waitedTaskList);
         } else if (lastSpinnerPosition == 1) {
-            taskAdapter.updateData(finishedTaskList); // 使用updateData而不是新建适配器
+            taskAdapter.updateData(finishedTaskList);
         }
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -154,15 +201,16 @@ public class TaskFragment extends Fragment {
                         lastSpinnerPosition = 1;
                         break;
                 }
-                recyclerView.setAdapter(taskAdapter);
+                // 通知适配器数据集发生变化
+                taskAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // 未选中任何项时的操作
-
             }
         });
+
         // 添加ItemTouchListener长按触发
         recyclerView.addOnItemTouchListener(new RecyclerView.SimpleOnItemTouchListener() {
             private final GestureDetector gestureDetector = new GestureDetector(
@@ -172,9 +220,9 @@ public class TaskFragment extends Fragment {
                         public void onLongPress(MotionEvent e) {
                             View childView = recyclerView.findChildViewUnder(e.getX(), e.getY());
                             if (childView != null) {
-                                // 长按跳转到 MultiSelectedBillActivity
-                                // 跳转时添加 FLAG 避免重复创建
-                                Toast.makeText(getContext(), "长按成功", Toast.LENGTH_SHORT).show();
+                                // 进入多选模式
+                                taskAdapter.enterMultiSelectMode();
+                                deleteButton.setVisibility(View.VISIBLE); // 显示删除按钮
                             }
                         }
                     }
@@ -186,6 +234,29 @@ public class TaskFragment extends Fragment {
                 return false; // 不拦截事件，保证 RecyclerView 仍可滚动
             }
         });
+    }
+
+    private void initListener() {
+        deleteButton.setOnClickListener(this::onClickDelete);
+    }
+
+    private void onClickDelete(View view) {
+        // 删除选中的任务
+        List<Task> selectedTasks = taskAdapter.getSelectedItems();
+        if (selectedTasks != null && !selectedTasks.isEmpty()) {
+            for (Task task : selectedTasks) {
+                // 删除数据库中的任务
+                SQLiteUtil.deleteTask("Task", "content=?", new String[]{task.getTaskContent()});
+            }
+            // 更新数据
+            initTask();
+            // 退出多选模式
+            taskAdapter.exitMultiSelectMode();
+            deleteButton.setVisibility(View.GONE); // 隐藏删除按钮
+            Toast.makeText(getContext(), "删除成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "未选择任何任务", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

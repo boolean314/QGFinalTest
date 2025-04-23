@@ -15,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.marknote.android.R;
+import com.marknote.android.viewPager.fragment.AiFragment;
 import com.marknote.android.viewPager.fragment.BillFragment;
 import com.marknote.android.viewPager.fragment.FragmentAdapter;
 import com.marknote.android.viewPager.fragment.TaskFragment;
@@ -42,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         fragmentAdapter.addFragment(new WeatherFragment());
         fragmentAdapter.addFragment(new BillFragment());
         fragmentAdapter.addFragment(new TaskFragment());
+        fragmentAdapter.addFragment(new AiFragment());
         viewPager.setAdapter(fragmentAdapter);
 
 
@@ -59,6 +61,8 @@ public class HomeActivity extends AppCompatActivity {
                 } else if(item.getItemId() == R.id.task){
                     viewPager.setCurrentItem(2);
                     return true;
+                } else if (item.getItemId()== R.id.ai){
+                    viewPager.setCurrentItem(3);
                 }
                 return false;
 
@@ -83,5 +87,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
 }

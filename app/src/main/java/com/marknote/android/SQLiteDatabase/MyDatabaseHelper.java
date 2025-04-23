@@ -17,7 +17,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             +"time DATETIME,"
             +"money text,"
             +"type text,"
-            +"comment text)";
+            +"comment text,"
+            +"category text)";
     public static final String CREATE_TASK = "create table Task ("
             +"id integer primary key autoincrement,"
             +"startTime DATETIME,"
@@ -38,14 +39,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(CREATE_ACCOUNTANDPASSWORD);
         db.execSQL(CREATE_BILL);
+        db.execSQL(CREATE_TASK);
         Toast.makeText(mContext, "数据库成功创建", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-if(oldVersion<7){
-    db.execSQL(CREATE_TASK);
-    Toast.makeText(mContext,"Task表创建成功",Toast.LENGTH_SHORT).show();
+if(oldVersion<10){
+     {
+        db.execSQL("drop table if exists Bill");
+        db.execSQL(CREATE_BILL);
+        Toast.makeText(mContext, "Bill 表更新成功", Toast.LENGTH_SHORT).show();
+    }
+
 }
     }
 }

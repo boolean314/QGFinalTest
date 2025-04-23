@@ -5,6 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.marknote.android.viewPager.fragment.Bill.billAdapter.Bill;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 public class SQLiteUtil {
     private static MyDatabaseHelper dbHelper;
     private static SQLiteDatabase db;
@@ -14,7 +21,7 @@ public class SQLiteUtil {
     //静态初始化dbHelper，要在主活动中添加SQLiteUtil.init(this);
     public static void init(Context context) {
         if (dbHelper == null) {
-            dbHelper = new MyDatabaseHelper(context.getApplicationContext(), "Note.db", null, 7);
+            dbHelper = new MyDatabaseHelper(context.getApplicationContext(), "Note.db", null, 10);
         }
     }
 
@@ -124,38 +131,38 @@ public class SQLiteUtil {
 
     //Bill部分
     //新增账单记录
-    public static void insertBill(String tableName, String time, String money, String type, String comment) {
+    public static void insertBill(String tableName, String time, String money, String type, String comment,String category) {
         db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put("time", time);
         values.put("money", money);
-        if (type.equals("支出")) {
-            values.put("type", "支出");
-        } else if (type.equals("收入")) {
-            values.put("type", "收入");
-        }
+        values.put("type", type);
         values.put("comment", comment);
+        values.put("category",category);
         db.insert(tableName, null, values);
         db.close();
 
     }
 
-    //查询某天收支情况
-    public static Cursor queryBill(String tableName, String time) {
-        db = dbHelper.getReadableDatabase();
-        String startTime = time + " 00:00:00";
-        String endTime = time + " 23:59:59";
-        Cursor cursor = db.query(tableName, null, "time BETWEEN ? AND ?", new String[]{startTime, endTime}, null, null, null);
-        return cursor;
-    }
-
-    //查询某时间段的收支情况
-    public static Cursor queryBill(String tableName, String startTime, String endTime) {
-        db = dbHelper.getWritableDatabase();
-        Cursor cursor=db.query(tableName, null, "time >= ? AND time <= ?", new String[]{startTime, endTime}, null, null, null);
-
-        return cursor;
+    public static Cursor queryBill(String startTime, String endTime, String comment, String category) {
+        // 构建 SQL 查询语句
+        StringBuilder sql = new StringBuilder("SELECT * FROM bill WHERE 1=1");
+        if (!startTime.isEmpty()) {
+            sql.append(" AND time >= '").append(startTime).append("'");
+        }
+        if (!endTime.isEmpty()) {
+            sql.append(" AND time <= '").append(endTime).append("'");
+        }
+        if (!comment.isEmpty()) {
+            sql.append(" AND comment LIKE '%").append(comment).append("%'");
+        }
+        if (!category.isEmpty()) {
+            sql.append(" AND category = '").append(category).append("'");
+        }
+db=dbHelper.getWritableDatabase();
+        // 执行查询
+        return db.rawQuery(sql.toString(), null);
     }
 //获得所有收支情况
     public static Cursor queryBill(String tableName) {
@@ -193,7 +200,162 @@ public class SQLiteUtil {
         db.close();
     }
 
+    //获取当天，周，月的支出账单
+    public static List<Bill> getPaysForToday() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+        String query = "SELECT * FROM Bill WHERE type = '支出' AND time LIKE '" + today + "%'";
+        db = dbHelper.getReadableDatabase();
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex("id"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
 
+    public static List<Bill> getPaysForThisWeek() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); // 将日期设置为周一
+        String startOfWeek = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+
+        calendar.add(Calendar.WEEK_OF_YEAR, 1); // 移动到下周
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // 将日期设置为周日
+        String endOfWeek = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+
+        db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM Bill WHERE type = '支出' AND time BETWEEN '" + startOfWeek + "' AND '" + endOfWeek + "'";
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
+
+    public static List<Bill> getPaysForThisMonth() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        String startOfMonth = new SimpleDateFormat("yyyy-MM-01").format(calendar.getTime());
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String endOfMonth = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+        String query = "SELECT * FROM Bill WHERE type = '支出' AND time BETWEEN '" + startOfMonth + "' AND '" + endOfMonth + "'";
+        db = dbHelper.getReadableDatabase();
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex("id"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
+    //获取当天，周，月的收入账单
+    public static List<Bill> getIncomesForToday() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+        String query = "SELECT * FROM Bill WHERE type = '收入' AND time LIKE '" + today + "%'";
+        db = dbHelper.getReadableDatabase();
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex("id"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
+
+    public static List<Bill> getIncomesForThisWeek() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); // 将日期设置为周一
+        String startOfWeek = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+
+        calendar.add(Calendar.WEEK_OF_YEAR, 1); // 移动到下周
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // 将日期设置为周日
+        String endOfWeek = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+
+        db = dbHelper.getReadableDatabase();
+        String query = "SELECT * FROM Bill WHERE type = '收入' AND time BETWEEN '" + startOfWeek + "' AND '" + endOfWeek + "'";
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
+
+    public static List<Bill> getIncomesForThisMonth() {
+        List<Bill> bills = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        String startOfMonth = new SimpleDateFormat("yyyy-MM-01").format(calendar.getTime());
+        calendar.add(Calendar.MONTH, 1);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        String endOfMonth = new SimpleDateFormat("yyyy-MM-dd").format(calendar.getTime());
+        String query = "SELECT * FROM Bill WHERE type = '收入' AND time BETWEEN '" + startOfMonth + "' AND '" + endOfMonth + "'";
+        db = dbHelper.getReadableDatabase();
+        cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                long id = cursor.getLong(cursor.getColumnIndex("id"));
+                String time = cursor.getString(cursor.getColumnIndex("time"));
+                String money = cursor.getString(cursor.getColumnIndex("money"));
+                String type = cursor.getString(cursor.getColumnIndex("type"));
+                String comment = cursor.getString(cursor.getColumnIndex("comment"));
+                String category = cursor.getString(cursor.getColumnIndex("category"));
+                bills.add(new Bill(time, money, type, comment, category));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return bills;
+    }
 
     //Task部分
     //添加事项
@@ -232,14 +394,30 @@ values.put("content", content);
         if (parts.length != 3) {
             return null;
         }
-
         String year = parts[0];
         String month = parts[1];
-
         // 构造查询条件：匹配yyyy-MM开头的日期
         String selection = "strftime('%Y-%m', startTime) = ?";
         String[] selectionArgs = new String[]{year + "-" + month};
 
         return db.query(tableName, null, selection, selectionArgs, null, null, null);
+    }
+
+    // 删除事项
+    public static void deleteTask(String tableName, String whereClause, String[] whereArgs) {
+        db = dbHelper.getWritableDatabase();
+        db.delete(tableName, whereClause, whereArgs);
+        db.close();
+    }
+
+    //修改事项
+    public static void updateTask(String tableName, String oldTaskContent, String newTaskContent, String newStartTime, String newEndTime) {
+        db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("content", newTaskContent);
+        values.put("startTime", newStartTime);
+        values.put("endTime", newEndTime);
+        db.update(tableName, values, "content=?", new String[]{oldTaskContent});
+        db.close();
     }
 }

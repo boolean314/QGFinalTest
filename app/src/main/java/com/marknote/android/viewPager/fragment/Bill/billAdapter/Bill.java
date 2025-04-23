@@ -7,7 +7,12 @@ public class Bill {
 
 
 
+    private String category;
+
     private String comment;
+    public String getCategory() {
+        return category;
+    }
 
     public String getType() {
         return type;
@@ -23,11 +28,20 @@ public class Bill {
     public String getComment() {
         return comment;
     }
-   public Bill(String time,String money,String type,String comment){
+
+    public Bill(String time,String money,String type,String comment){
         this.time=time;
        this.money=money;
        this.comment=comment;
        this.type = type;
 
    }
+    public Bill(String time,String money,String type,String comment,String category){
+        this.time=time;
+        this.money=money;
+        this.comment=comment;
+        this.type = type;
+        this.category = category;
+
+    }
 }

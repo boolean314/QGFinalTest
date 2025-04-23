@@ -3,9 +3,12 @@ package com.marknote.android.viewPager.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ public class WeatherFragment extends Fragment {
     private TextView cityText, dateText, weekText, weaText, temText, hlText;
 
     private ImageView weaImgImage;
+    private ProgressBar progressBar;
 
 
     @Override
@@ -51,7 +55,8 @@ public class WeatherFragment extends Fragment {
             temText = view.findViewById(R.id.tem);
             weaImgImage = view.findViewById(R.id.wea_img);
             hlText = view.findViewById(R.id.hl);
-
+            progressBar = view.findViewById(R.id.weather_progressBar);
+            progressBar.setVisibility(View.VISIBLE);
 
             HttpUtil.sendOkHttpRequest("https://gfeljm.tianqiapi.com/api?unescape=1&version=v63&appid=52686657&appsecret=o6yhe8Yb", new okhttp3.Callback() {
                 @Override
@@ -69,12 +74,14 @@ public class WeatherFragment extends Fragment {
                         temText.setText(tem + "℃");
                         hlText.setText("最低" + tem2 + "℃最高" + tem1 + "℃");
                         chooseImage(weaImg);
+                        chooseBackground(weaImg);
                         //设置recyclerView
                         RecyclerView recyclerView = view.findViewById(R.id.weather_recycler_view);
                         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
                         recyclerView.setLayoutManager(layoutManager);
                         WeatherAdapter adapter = new WeatherAdapter(hourlyList);
                         recyclerView.setAdapter(adapter);
+                        progressBar.setVisibility(View.GONE);
                     });
 
 
@@ -89,11 +96,16 @@ public class WeatherFragment extends Fragment {
                 }
             });
         }
+        setHasOptionsMenu(true);
         return view;
 
     }
 
-
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        // 不加载任何菜单资源
+    }
     //解析JSON数据
     private void parseJSONWithGSON(String jsonData) {
         Gson gson = new Gson();
@@ -131,6 +143,20 @@ public class WeatherFragment extends Fragment {
             weaImgImage.setImageResource(R.drawable.yu);
         } else if (weaImg.equals("bingbao")) {
             weaImgImage.setImageResource(R.drawable.bingbao);
+        }
+    }
+    //根据wea_img匹配背景
+    private void chooseBackground(String weaImg) {
+        if (weaImg.equals("yun")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.duoyun);
+        }else if(weaImg.equals("lei")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.leitian);
+        }else if(weaImg.equals("qing")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.qingtian);
+        }else if(weaImg.equals("shachen")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.shachentian);
+        }else if(weaImg.equals("wu")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.wutian);
+        }else if(weaImg.equals("xue")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.xuetian);
+        }else if(weaImg.equals("yin")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yintian);
+        }else if(weaImg.equals("yu")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yutian);
+        }else if(weaImg.equals("bingbao")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.bingbaotian);
         }
     }
 

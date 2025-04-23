@@ -9,10 +9,10 @@
         android:title="收入记录" />
     <item
         android:id="@+id/bill_query"
-        android:title="账单查询" />
+        android:title="查询账单" />
     <item
         android:id="@+id/bill_insert"
-android:title="添加记录" />
+android:title="添加账单" />
 
 
 </menu>

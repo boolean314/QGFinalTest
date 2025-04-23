@@ -34,7 +34,7 @@ import java.util.Locale;
 public class ClickQueryTaskActivity extends AppCompatActivity {
     private Button chooseTime, queryDay, queryMonth;
     private TextView date;
-    private List<Task>taskList;
+    private List<Task> taskList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class ClickQueryTaskActivity extends AppCompatActivity {
         queryDay = findViewById(R.id.query_day);
         queryMonth = findViewById(R.id.query_month);
         date = findViewById(R.id.choose_time_text);
-        taskList=new ArrayList<>();
+        taskList = new ArrayList<>();
 
         initListener();
     }
@@ -87,18 +87,19 @@ public class ClickQueryTaskActivity extends AppCompatActivity {
         );
         datePickerDialog.show();
     }
-    private void onClickQueryDay(View view) {
-        String time=date.getText().toString();
 
-        if(!time.isEmpty()){
+    private void onClickQueryDay(View view) {
+        String time = date.getText().toString();
+
+        if (!time.isEmpty()) {
             taskList.clear();
-            Cursor cursor=SQLiteUtil.queryDayTask("Task", time);
-            if(cursor!=null&&cursor.getCount()>0){
-                while(cursor.moveToNext()){
-                    String taskContent=cursor.getString(cursor.getColumnIndex("content"));
-                    String startTime=cursor.getString(cursor.getColumnIndex("startTime"));
-                    String endTime=cursor.getString(cursor.getColumnIndex("endTime"));
-                    Task task=new Task(startTime, endTime, taskContent);
+            Cursor cursor = SQLiteUtil.queryDayTask("Task", time);
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    String taskContent = cursor.getString(cursor.getColumnIndex("content"));
+                    String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                    String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                    Task task = new Task(startTime, endTime, taskContent);
                     taskList.add(task);
 
                 }
@@ -109,25 +110,33 @@ public class ClickQueryTaskActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 TaskAdapter adapter = new TaskAdapter(taskList);
                 recyclerView.setAdapter(adapter);
-            }else{
+            } else {
                 Toast.makeText(this, "当日无事项", Toast.LENGTH_SHORT).show();
+                taskList.clear();
+                RecyclerView recyclerView = findViewById(R.id.query_task_recycler_view);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                TaskAdapter adapter = new TaskAdapter(taskList);
+                recyclerView.setAdapter(adapter);
             }
-        }else{
+        } else {
             Toast.makeText(this, "请选择查询日期", Toast.LENGTH_SHORT).show();
+
         }
     }
-    private void onClickQueryMonth(View view) {
-        String time=date.getText().toString();
 
-        if(!time.isEmpty()){
+    private void onClickQueryMonth(View view) {
+        String time = date.getText().toString();
+
+        if (!time.isEmpty()) {
             taskList.clear();
-            Cursor cursor=SQLiteUtil.queryMonthTask("Task", time);
-            if(cursor!=null&&cursor.getCount()>0){
-                while(cursor.moveToNext()){
-                    String taskContent=cursor.getString(cursor.getColumnIndex("content"));
-                    String startTime=cursor.getString(cursor.getColumnIndex("startTime"));
-                    String endTime=cursor.getString(cursor.getColumnIndex("endTime"));
-                    Task task=new Task(startTime, endTime, taskContent);
+            Cursor cursor = SQLiteUtil.queryMonthTask("Task", time);
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    String taskContent = cursor.getString(cursor.getColumnIndex("content"));
+                    String startTime = cursor.getString(cursor.getColumnIndex("startTime"));
+                    String endTime = cursor.getString(cursor.getColumnIndex("endTime"));
+                    Task task = new Task(startTime, endTime, taskContent);
                     taskList.add(task);
 
                 }
@@ -138,10 +147,16 @@ public class ClickQueryTaskActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(linearLayoutManager);
                 TaskAdapter adapter = new TaskAdapter(taskList);
                 recyclerView.setAdapter(adapter);
-            }else{
+            } else {
                 Toast.makeText(this, "当月无事项", Toast.LENGTH_SHORT).show();
+                taskList.clear();
+                RecyclerView recyclerView = findViewById(R.id.query_task_recycler_view);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                recyclerView.setLayoutManager(linearLayoutManager);
+                TaskAdapter adapter = new TaskAdapter(taskList);
+                recyclerView.setAdapter(adapter);
             }
-        }else{
+        } else {
             Toast.makeText(this, "请选择查询日期", Toast.LENGTH_SHORT).show();
         }
 

@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:text="支出统计"
+        android:textSize="20sp" />
+
+    <RadioGroup
+        android:id="@+id/pay_radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="60dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/pay_radio_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="日"
+
+            />
+
+        <RadioButton
+            android:id="@+id/pay_radio_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="周" />
+
+        <RadioButton
+            android:id="@+id/pay_radio_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="月" />
+    </RadioGroup>
+
+
+
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/pay_barChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pay_pieChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pay_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+</LinearLayout>

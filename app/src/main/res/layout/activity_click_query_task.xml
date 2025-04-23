@@ -9,55 +9,79 @@
     android:orientation="vertical"
     tools:context=".viewPager.fragment.task.clickmenu.ClickQueryTaskActivity">
 
-    <LinearLayout
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询事项:"
+        android:textSize="30dp"
+        android:layout_marginTop="20dp"
+
+        />
+    <!-- 第一个CardView包裹日期选择部分 -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
 
-        >
-
-        <Button
-            android:id="@+id/choose_time_btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="选择查询日期"
-            android:textSize="20sp" />
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-        <TextView
-            android:id="@+id/choose_time_text"
-            android:layout_width="0dp"
+            <Button
+                android:id="@+id/choose_time_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择查询日期"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/choose_time_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 第二个CardView包裹查询按钮部分 -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:cardCornerRadius="8dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="center"
-            android:textSize="20sp"
+            android:orientation="horizontal"
+            android:padding="8dp">
 
-            />
-    </LinearLayout>
+            <Button
+                android:id="@+id/query_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查询当天事项"
+                android:textSize="20sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        >
+            <Button
+                android:id="@+id/query_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="查询该月事项"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/query_day"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="查询当天事项"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/query_month"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="查询该月事项"
-            android:textSize="20sp" />
-    </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
-
         android:id="@+id/query_task_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
