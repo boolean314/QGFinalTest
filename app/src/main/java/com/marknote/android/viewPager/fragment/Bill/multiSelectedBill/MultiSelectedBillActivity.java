@@ -23,10 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiSelectedBillActivity extends AppCompatActivity {
-private List<Bill> billList = new ArrayList<>();
-private Button delete;
-private Button edit;
-private  MultiSelectedBillAdapter adapter;
+    private List<Bill> billList = new ArrayList<>();
+    private Button delete;
+    private Button edit;
+    private MultiSelectedBillAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +45,7 @@ private  MultiSelectedBillAdapter adapter;
         initListener();
 
     }
+
     private void initBill() {
         Cursor cursor = SQLiteUtil.queryBill("Bill");
         billList.clear(); // 清空旧数据
@@ -71,51 +73,53 @@ private  MultiSelectedBillAdapter adapter;
         RecyclerView recyclerView = findViewById(R.id.multi_bill_recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-      adapter = new MultiSelectedBillAdapter(billList);
+        adapter = new MultiSelectedBillAdapter(billList);
         recyclerView.setAdapter(adapter);
 
-}
-private void initListener(){
-       delete.setOnClickListener(this::onClickDelete);
-       edit.setOnClickListener(this::onClickEdit);
-}
-private void onClickDelete(View view){
-    List<Bill> selectedBills = adapter.getSelectedBills();
-    if(!selectedBills.isEmpty()){
-    for (Bill selectedBill : selectedBills) {
-        String time = selectedBill.getTime();
-        String type = selectedBill.getType();
-        String money=selectedBill.getMoney();
-
-        SQLiteUtil.deleteBill("Bill", "time=? and type=? and money=?", new String[]{time, type,money});
-    }
-    Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
-    finish();
-}
-    else{
-        Toast.makeText(this,"请选择要删除的账单",Toast.LENGTH_SHORT).show();
-    }
     }
 
-private void onClickEdit(View view){
-    List<Bill> selectedBills = adapter.getSelectedBills();
-    if(selectedBills.size()==1){
-    Bill selectedBill = selectedBills.get(0);
-        String time = selectedBill.getTime();
-        String type = selectedBill.getType();
-        String money=selectedBill.getMoney();
-        String comment=selectedBill.getComment();
-        Intent intent = new Intent(this, EditBillActivity.class);
-        intent.putExtra("time", time);
-        intent.putExtra("type", type);
-        intent.putExtra("money", money);
-        intent.putExtra("comment", comment);
-        startActivity(intent);
-        finish();
-
-    }else{
-        Toast.makeText(this,"请选择一个账单进行编辑",Toast.LENGTH_SHORT).show();
+    private void initListener() {
+        delete.setOnClickListener(this::onClickDelete);
+        edit.setOnClickListener(this::onClickEdit);
     }
-}
+
+    private void onClickDelete(View view) {
+        List<Bill> selectedBills = adapter.getSelectedBills();
+        if (!selectedBills.isEmpty()) {
+            for (Bill selectedBill : selectedBills) {
+                String time = selectedBill.getTime();
+                String type = selectedBill.getType();
+                String money = selectedBill.getMoney();
+                String comment=selectedBill.getComment();
+
+                SQLiteUtil.deleteBill("Bill", "time=? and type=? and money=? and comment=?", new String[]{time, type, money,comment});
+            }
+            Toast.makeText(this, "删除成功", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "请选择要删除的账单", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void onClickEdit(View view) {
+        List<Bill> selectedBills = adapter.getSelectedBills();
+        if (selectedBills.size() == 1) {
+            Bill selectedBill = selectedBills.get(0);
+            String time = selectedBill.getTime();
+            String type = selectedBill.getType();
+            String money = selectedBill.getMoney();
+            String comment = selectedBill.getComment();
+            Intent intent = new Intent(this, EditBillActivity.class);
+            intent.putExtra("time", time);
+            intent.putExtra("type", type);
+            intent.putExtra("money", money);
+            intent.putExtra("comment", comment);
+            startActivity(intent);
+            finish();
+
+        } else {
+            Toast.makeText(this, "请选择一个账单进行编辑", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

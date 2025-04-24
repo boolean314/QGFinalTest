@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".register.RegisterActivity"
-    android:layout_marginStart="16dp"
-    android:layout_marginEnd="16dp">
+    tools:context=".register.RegisterActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="欢迎注册MarkNote"
-        android:textSize="30sp"
         android:layout_gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:text="欢迎注册MarkNote"
+        android:textSize="30sp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -35,7 +34,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Account Card -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -62,14 +60,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="请设置账号"
                         android:layout_marginTop="3dp"
-                        android:background="@android:color/transparent"/>
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="请设置账号" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Password Card -->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,20 +94,19 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:hint="请设置密码"
                         android:layout_marginTop="3dp"
-                        android:background="@android:color/transparent"/>
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="请设置密码" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Register Button -->
             <Button
                 android:id="@+id/finish_register"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="完成注册"
-                android:layout_marginTop="16dp"/>
+                android:layout_marginTop="16dp"
+                android:text="完成注册" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

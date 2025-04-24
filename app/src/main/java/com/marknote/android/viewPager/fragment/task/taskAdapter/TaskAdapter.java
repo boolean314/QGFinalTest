@@ -35,12 +35,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public void enterMultiSelectMode() {
         isMultiSelectMode = true;
-        notifyDataSetChanged(); // 刷新适配器
+        notifyDataSetChanged();
     }
 
     public void exitMultiSelectMode() {
         isMultiSelectMode = false;
-        notifyDataSetChanged(); // 刷新适配器
+        notifyDataSetChanged();
     }
 
     public boolean isMultiSelectMode() {
@@ -127,15 +127,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             String newTaskContent = taskContentEditText.getText().toString();
             String newStartTime = startTimeEditText.getText().toString();
             String newEndTime = endTimeEditText.getText().toString();
-            // 更新数据集
             task.setTaskContent(newTaskContent);
             task.setStartTime(newStartTime);
             task.setEndTime(newEndTime);
-
-            // 更新数据库
             SQLiteUtil.updateTask("Task", task.getTaskContent(), newTaskContent, newStartTime, newEndTime);
-
-            // 通知适配器数据集发生变化
             notifyDataSetChanged();
         });
 

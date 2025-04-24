@@ -47,15 +47,15 @@ holder.time.setText(bill.getTime());
 
 holder.comment.setText(bill.getComment());
 String type=bill.getType();
-if (type != null && type.equals("支出")) {
+if (type.equals("支出")) {
             holder.money.setTextColor(0xffff0000); // 红色
             holder.money.setText("-" + bill.getMoney());
         } else {
             holder.money.setTextColor(0xff00ff00); // 绿色
             holder.money.setText("+" + bill.getMoney());
         }
-
     }
+
     @Override
     public int getItemCount() {
         return mBillList.size();

@@ -83,8 +83,6 @@ public class WeatherFragment extends Fragment {
                         recyclerView.setAdapter(adapter);
                         progressBar.setVisibility(View.GONE);
                     });
-
-
                 }
 
                 @Override
@@ -106,6 +104,7 @@ public class WeatherFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         // 不加载任何菜单资源
     }
+
     //解析JSON数据
     private void parseJSONWithGSON(String jsonData) {
         Gson gson = new Gson();
@@ -145,18 +144,27 @@ public class WeatherFragment extends Fragment {
             weaImgImage.setImageResource(R.drawable.bingbao);
         }
     }
+
     //根据wea_img匹配背景
     private void chooseBackground(String weaImg) {
         if (weaImg.equals("yun")) {
             requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.duoyun);
-        }else if(weaImg.equals("lei")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.leitian);
-        }else if(weaImg.equals("qing")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.qingtian);
-        }else if(weaImg.equals("shachen")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.shachentian);
-        }else if(weaImg.equals("wu")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.wutian);
-        }else if(weaImg.equals("xue")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.xuetian);
-        }else if(weaImg.equals("yin")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yintian);
-        }else if(weaImg.equals("yu")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yutian);
-        }else if(weaImg.equals("bingbao")){requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.bingbaotian);
+        } else if (weaImg.equals("lei")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.leitian);
+        } else if (weaImg.equals("qing")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.qingtian);
+        } else if (weaImg.equals("shachen")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.shachentian);
+        } else if (weaImg.equals("wu")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.wutian);
+        } else if (weaImg.equals("xue")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.xuetian);
+        } else if (weaImg.equals("yin")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yintian);
+        } else if (weaImg.equals("yu")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.yutian);
+        } else if (weaImg.equals("bingbao")) {
+            requireActivity().getWindow().setBackgroundDrawableResource(R.drawable.bingbaotian);
         }
     }
 

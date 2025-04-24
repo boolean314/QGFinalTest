@@ -31,16 +31,13 @@ public class MultiSelectedBillAdapter extends RecyclerView.Adapter<MultiSelected
             mCheckedStatus.add(false);
         }
     }
-    // 新增：设置选中状态变化监听器
-    public void setOnItemCheckedChangeListener(OnItemCheckedChangeListener listener) {
-        this.mCheckedListener = listener;
-    }
-    // 新增：选中状态变化监听接口
+
+    //选中状态变化监听接口
     public interface OnItemCheckedChangeListener {
         void onItemCheckedChange(int position, boolean isChecked);
     }
 
-    // 新增：获取选中状态的Bill列表
+    //获取选中状态的Bill列表
     public List<Bill> getSelectedBills() {
         List<Bill> selectedBills = new ArrayList<>();
         for (int i = 0; i < mBillList.size(); i++) {
@@ -51,13 +48,7 @@ public class MultiSelectedBillAdapter extends RecyclerView.Adapter<MultiSelected
         return selectedBills;
     }
 
-    // 新增：设置某个项目的选中状态
-    public void setItemChecked(int position, boolean isChecked) {
-        if (position >= 0 && position < mCheckedStatus.size()) {
-            mCheckedStatus.set(position, isChecked);
-            notifyItemChanged(position);
-        }
-    }
+
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView time;
         TextView money;
@@ -73,21 +64,21 @@ public class MultiSelectedBillAdapter extends RecyclerView.Adapter<MultiSelected
     }
 
     @Override
-    public MultiSelectedBillAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_multi_selected_bill_item,parent,false);
-        MultiSelectedBillAdapter.ViewHolder holder=new MultiSelectedBillAdapter.ViewHolder(view);
+        ViewHolder holder=new ViewHolder(view);
         return holder;
 
     }
     @Override
-    public void onBindViewHolder(MultiSelectedBillAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         Bill bill=mBillList.get(position);
         holder.time.setText(bill.getTime());
 
         holder.comment.setText(bill.getComment());
         String type=bill.getType();
-        if (type != null && type.equals("支出")) {
+        if (type.equals("支出")) {
             holder.money.setTextColor(0xffff0000); // 红色
             holder.money.setText("-" + bill.getMoney());
         } else {

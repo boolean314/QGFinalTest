@@ -87,14 +87,12 @@ public class BillFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
         initBill();
     }
 
     private void initBill() {
         toolbar = view.findViewById(R.id.bill_toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
         Cursor cursor = SQLiteUtil.queryBill("Bill");
         billList.clear(); // 清空旧数据
 
@@ -147,7 +145,7 @@ public class BillFragment extends Fragment {
             @Override
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 gestureDetector.onTouchEvent(e); // 将触摸事件交给 GestureDetector 处理
-                return false; // 不拦截事件，保证 RecyclerView 仍可滚动
+                return false; //返回 false 表示不拦截事件，RecyclerView 会继续处理触摸事件，例如滚动列表。
             }
         });
     }

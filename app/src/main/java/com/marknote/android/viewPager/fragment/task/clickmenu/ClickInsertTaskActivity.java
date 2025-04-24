@@ -25,12 +25,12 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class ClickInsertTaskActivity extends AppCompatActivity {
-    private Button chooseStartTime,chooseEndTime,finishInsert;
+    private Button chooseStartTime, chooseEndTime, finishInsert;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
-    private TextView insertStartTime,insertEndTime;
-   private EditText insertTaskContent;
+    private TextView insertStartTime, insertEndTime;
+    private EditText insertTaskContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +43,11 @@ public class ClickInsertTaskActivity extends AppCompatActivity {
             return insets;
         });
         chooseStartTime = findViewById(R.id.choose_start_time);
-        chooseEndTime=findViewById(R.id.choose_end_time);
-        finishInsert =findViewById(R.id.finish_insert_task);
+        chooseEndTime = findViewById(R.id.choose_end_time);
+        finishInsert = findViewById(R.id.finish_insert_task);
         insertStartTime = findViewById(R.id.insert_start_time);
-        insertEndTime=findViewById(R.id.insert_end_time);
-        insertTaskContent=findViewById(R.id.insert_task_content);
+        insertEndTime = findViewById(R.id.insert_end_time);
+        insertTaskContent = findViewById(R.id.insert_task_content);
         initListener();
     }
 
@@ -98,7 +98,8 @@ public class ClickInsertTaskActivity extends AppCompatActivity {
         );
         datePickerDialog.show();
     }
-    private void onClickChooseEndTime(View view){
+
+    private void onClickChooseEndTime(View view) {
         // 获取当前日期和时间
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -139,17 +140,17 @@ public class ClickInsertTaskActivity extends AppCompatActivity {
         );
         datePickerDialog.show();
     }
+
     private void onClickFinishInsert(View view) {
-String startTime = insertStartTime.getText().toString();
+        String startTime = insertStartTime.getText().toString();
         String endTime = insertEndTime.getText().toString();
         String taskContent = insertTaskContent.getText().toString();
-        if(!startTime.isEmpty()&&!endTime.isEmpty()&&!taskContent.isEmpty()){
-        SQLiteUtil .insertTask("Task",startTime,endTime,taskContent);
-        Toast.makeText(this,"添加成功",Toast.LENGTH_SHORT).show();
-        finish();
-        }
-        else{
-            Toast.makeText(this,"请输入完整事项",Toast.LENGTH_SHORT).show();
+        if (!startTime.isEmpty() && !endTime.isEmpty() && !taskContent.isEmpty()) {
+            SQLiteUtil.insertTask("Task", startTime, endTime, taskContent);
+            Toast.makeText(this, "添加成功", Toast.LENGTH_SHORT).show();
+            finish();
+        } else {
+            Toast.makeText(this, "请输入完整事项", Toast.LENGTH_SHORT).show();
         }
     }
-    }
+}

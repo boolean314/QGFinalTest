@@ -42,15 +42,16 @@ public class AiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ai, container, false);
 
-        editTextMessage = view.findViewById(R.id.editTextMessage);
-        buttonSend = view.findViewById(R.id.buttonSend);
-        layoutMessages = view.findViewById(R.id.layoutMessages);
-        progressBar = view.findViewById(R.id.progressBar);
+        editTextMessage = view.findViewById(R.id.edit_text_message);
+        buttonSend = view.findViewById(R.id.button_send);
+        layoutMessages = view.findViewById(R.id.layout_messages);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         setHasOptionsMenu(true);
         initListener();
         return view;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -66,12 +67,13 @@ public class AiFragment extends Fragment {
         if (!query.isEmpty()) {
             editTextMessage.setText(""); // 清空输入框
             displayUserMessage(query);
-            showProgressBar(); // 显示进度条
+            progressBar.setVisibility(View.VISIBLE);
             queryModel(query);
         } else {
             Toast.makeText(getActivity(), "请输入消息", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void displayUserMessage(String message) {
         TextView textView = new TextView(getActivity());
         textView.setText(message);
@@ -82,7 +84,7 @@ public class AiFragment extends Fragment {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(0, 16, 0, 0); // 设置顶部间距为16dp，其他方向为0
+        layoutParams.setMargins(0, 16, 0, 0);
         textView.setLayoutParams(layoutParams);
 
         layoutMessages.addView(textView);
@@ -95,16 +97,16 @@ public class AiFragment extends Fragment {
                 try {
                     String result = callApi(query);
                     // 更新UI需要在主线程中进行
-                   requireActivity().runOnUiThread(()->{
-                       hideProgressBar(); // 隐藏进度条
-                       displayAiMessage(result);
-                   });
+                    requireActivity().runOnUiThread(() -> {
+                        progressBar.setVisibility(View.GONE);
+                        displayAiMessage(result);
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            hideProgressBar(); // 隐藏进度条
+                            progressBar.setVisibility(View.GONE);
                             Toast.makeText(getActivity(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -128,13 +130,6 @@ public class AiFragment extends Fragment {
         layoutMessages.addView(textView);
     }
 
-    private void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgressBar() {
-        progressBar.setVisibility(View.GONE);
-    }
 
     private String callApi(String query) throws Exception {
         String userId = "10284711用户";

@@ -56,16 +56,13 @@ public class TaskFragment extends Fragment {
     private CheckBox checkBox;
 
     @Override
-    // 创建视图
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // 使用布局文件fragment_task.xml填充视图
         view = inflater.inflate(R.layout.fragment_task, container, false);
-
         toolbar = view.findViewById(R.id.task_toolbar);
         spinner = view.findViewById(R.id.selected_task_status);
         recyclerView = view.findViewById(R.id.task_recycler_view);
-        deleteButton = view.findViewById(R.id.delete_task); // 初始化删除按钮
-        deleteButton.setVisibility(View.GONE); // 默认隐藏删除按钮
+        deleteButton = view.findViewById(R.id.delete_task);
+        deleteButton.setVisibility(View.GONE);
 checkBox= view.findViewById(R.id.task_checkbox);
         // 给spinner初始化适配器
         String[] data = {"未办", "已结束"};
@@ -96,9 +93,9 @@ checkBox= view.findViewById(R.id.task_checkbox);
                 }
             }
         };
-
         // 将回调添加到Activity的返回按钮分发器
         requireActivity().getOnBackPressedDispatcher().addCallback(getActivity(), callback);
+
         initListener();
 
         return view;
@@ -137,7 +134,6 @@ checkBox= view.findViewById(R.id.task_checkbox);
         waitedTaskList.clear();
         finishedTaskList.clear();
 
-        // 获取当前时间
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
         if (cursor != null) {
@@ -178,7 +174,7 @@ checkBox= view.findViewById(R.id.task_checkbox);
             }
         });
 
-        // 更新适配器数据
+        // 根据上一次选择的spinner决定要加载的list
         if (lastSpinnerPosition == 0) {
             taskAdapter.updateData(waitedTaskList);
         } else if (lastSpinnerPosition == 1) {
@@ -201,7 +197,6 @@ checkBox= view.findViewById(R.id.task_checkbox);
                         lastSpinnerPosition = 1;
                         break;
                 }
-                // 通知适配器数据集发生变化
                 taskAdapter.notifyDataSetChanged();
             }
 
@@ -222,7 +217,7 @@ checkBox= view.findViewById(R.id.task_checkbox);
                             if (childView != null) {
                                 // 进入多选模式
                                 taskAdapter.enterMultiSelectMode();
-                                deleteButton.setVisibility(View.VISIBLE); // 显示删除按钮
+                                deleteButton.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -245,10 +240,8 @@ checkBox= view.findViewById(R.id.task_checkbox);
         List<Task> selectedTasks = taskAdapter.getSelectedItems();
         if (selectedTasks != null && !selectedTasks.isEmpty()) {
             for (Task task : selectedTasks) {
-                // 删除数据库中的任务
                 SQLiteUtil.deleteTask("Task", "content=?", new String[]{task.getTaskContent()});
             }
-            // 更新数据
             initTask();
             // 退出多选模式
             taskAdapter.exitMultiSelectMode();

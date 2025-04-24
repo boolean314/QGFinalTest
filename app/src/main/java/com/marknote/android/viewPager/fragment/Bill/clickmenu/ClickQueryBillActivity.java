@@ -68,19 +68,21 @@ private EditText comment,category;
        query.setOnClickListener(this::onClickQuery);
        clearTime.setOnClickListener(this::onClickClearTime);
     }
+
 private void onClickChooseStartTime(View view) {
     showPicker(startTime);
 }
+
 private void onClickChooseEndTime(View view) {
     showPicker(endTime);
 }
 
 
     private void onClickQuery(View view) {
-        String startTimeStr = startTime.getText().toString().trim();
-        String endTimeStr = endTime.getText().toString().trim();
-        String commentStr = comment.getText().toString().trim();
-        String categoryStr = category.getText().toString().trim();
+        String startTimeStr = startTime.getText().toString();
+        String endTimeStr = endTime.getText().toString();
+        String commentStr = comment.getText().toString();
+        String categoryStr = category.getText().toString();
 
         // 检查是否至少输入了一个条件
         if (startTimeStr.isEmpty() && endTimeStr.isEmpty() && commentStr.isEmpty() && categoryStr.isEmpty()) {
@@ -96,7 +98,6 @@ private void onClickChooseEndTime(View view) {
         if (!startTimeStr.isEmpty() && endTimeStr.isEmpty()) {
             // 将起始时间设置为当天的开始时间（00:00:00）
             startTimeStr = startTimeStr.substring(0, 10) + " 00:00:00";
-            // 将结束时间设置为当天的结束时间（23:59:59）
             endTimeStr = startTimeStr.substring(0, 10) + " 23:59:59";
             Toast.makeText(this,"已为您查询当天账单",Toast.LENGTH_SHORT).show();
         }

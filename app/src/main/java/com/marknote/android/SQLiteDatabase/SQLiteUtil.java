@@ -25,7 +25,7 @@ public class SQLiteUtil {
         }
     }
 
-//登录注册部分
+    //登录注册部分
     //把注册的账号密码添加到数据库对应的表
     public static void insertData(String tableName, String data1, String data2) {
 
@@ -131,7 +131,7 @@ public class SQLiteUtil {
 
     //Bill部分
     //新增账单记录
-    public static void insertBill(String tableName, String time, String money, String type, String comment,String category) {
+    public static void insertBill(String tableName, String time, String money, String type, String comment, String category) {
         db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -139,7 +139,7 @@ public class SQLiteUtil {
         values.put("money", money);
         values.put("type", type);
         values.put("comment", comment);
-        values.put("category",category);
+        values.put("category", category);
         db.insert(tableName, null, values);
         db.close();
 
@@ -160,27 +160,30 @@ public class SQLiteUtil {
         if (!category.isEmpty()) {
             sql.append(" AND category = '").append(category).append("'");
         }
-db=dbHelper.getWritableDatabase();
+        db = dbHelper.getWritableDatabase();
         // 执行查询
         return db.rawQuery(sql.toString(), null);
     }
-//获得所有收支情况
+
+    //获得所有收支情况
     public static Cursor queryBill(String tableName) {
         db = dbHelper.getWritableDatabase();
         Cursor cursor = db.query(tableName, null, null, null, null, null, null);
         return cursor;
     }
+
     // 删除账单记录
     public static void deleteBill(String tableName, String limit, String[] whereArgs) {
         db = dbHelper.getWritableDatabase();
         db.delete(tableName, limit, whereArgs);
         db.close();
     }
+
     //找出要修改记录在数据库中的id
-    public static int checkBillId(String tableName,String time,String money,String type,String comment){
+    public static int checkBillId(String tableName, String time, String money, String type, String comment) {
         db = dbHelper.getWritableDatabase();
-        Cursor cursor = db.query(tableName, null, "time=? AND money=? AND type=? AND comment=?", new String[]{time,money,type,comment}, null, null, null);
-        int id=0;
+        Cursor cursor = db.query(tableName, null, "time=? AND money=? AND type=? AND comment=?", new String[]{time, money, type, comment}, null, null, null);
+        int id = 0;
         if (cursor != null && cursor.moveToFirst()) {
             id = cursor.getInt(cursor.getColumnIndex("id"));
             db.close();
@@ -188,6 +191,7 @@ db=dbHelper.getWritableDatabase();
         }
         return id;
     }
+
     //根据id对数据的记录进行更新
     public static void updateBill(String tableName, int id, String time, String money, String type, String comment) {
         db = dbHelper.getWritableDatabase();
@@ -278,6 +282,7 @@ db=dbHelper.getWritableDatabase();
         db.close();
         return bills;
     }
+
     //获取当天，周，月的收入账单
     public static List<Bill> getIncomesForToday() {
         List<Bill> bills = new ArrayList<>();
@@ -359,12 +364,12 @@ db=dbHelper.getWritableDatabase();
 
     //Task部分
     //添加事项
-    public static void insertTask(String tableName, String startTime,String endTime, String content) {
+    public static void insertTask(String tableName, String startTime, String endTime, String content) {
         db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("startTime", startTime);
         values.put("endTime", endTime);
-values.put("content", content);
+        values.put("content", content);
         db.insert(tableName, null, values);
         db.close();
     }

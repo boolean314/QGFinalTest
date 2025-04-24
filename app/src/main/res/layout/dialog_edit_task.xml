@@ -9,7 +9,7 @@
         android:id="@+id/edit_task_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="请输入任务内容" />
+        android:hint="请输入事项内容" />
 
     <EditText
         android:id="@+id/edit_start_time"

@@ -17,7 +17,7 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/layoutMessages"
+            android:id="@+id/layout_messages"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -26,23 +26,25 @@
     </ScrollView>
 
     <EditText
-        android:id="@+id/editTextMessage"
+        android:id="@+id/edit_text_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="输入消息"
         android:padding="12dp"
         android:layout_marginBottom="8dp"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:gravity="center"
+        />
 
     <Button
-        android:id="@+id/buttonSend"
+        android:id="@+id/button_send"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="发送"
         android:layout_marginBottom="16dp"/>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
